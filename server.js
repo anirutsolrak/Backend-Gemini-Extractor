@@ -74,12 +74,16 @@ app.post('/api/extrair-dados', async (req, res) => {
   
       res.json({ dados: extractedData });
       
-  } catch (error) {
-      console.error("Erro no backend ao processar imagem e chamar API Gemini:", error);
-      if(error.response && error.response.text) {
-         console.error("Erro no backend ao processar imagem e chamar API Gemini:", error.response.text);
+  }   catch (error) {
+    console.error("Erro no backend ao processar imagem e chamar API Gemini:", error);
+      let errorMessage = "Erro interno do servidor ao processar a imagem.";
+       if (error.response && error.response.text) {
+           console.error("Erro no backend ao processar imagem e chamar API Gemini:", error.response.text);
+           errorMessage = error.response.text
+       } else if (error.message) {
+         errorMessage = error.message
       }
-      res.status(500).json({ error: "Erro interno do servidor ao processar a imagem.", details: error.message});
+      res.status(500).json({ error: errorMessage});
   }
 });
 
