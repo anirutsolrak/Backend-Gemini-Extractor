@@ -9,7 +9,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 const corsOptions = {
-  origin: 'https://frontend-gemini-extractor.vercel.app/', // Your frontend URL
+  origin: 'https://frontend-gemini-extractor.vercel.app', // Your frontend URL
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true, // If you are using cookies
   allowedHeaders: 'Content-Type, Authorization', // Add any custom headers your app uses
