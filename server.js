@@ -2,13 +2,20 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-const path = require('path'); // Import the path module
+const path = require('path');
 
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+const corsOptions = {
+  origin: 'https://frontend-gemini-extractor.vercel.app/', // Your frontend URL
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, // If you are using cookies
+  allowedHeaders: 'Content-Type, Authorization', // Add any custom headers your app uses
+};
+
+app.use(cors(corsOptions));
 app.use(express.json({ limit: '20mb' }));
 
 // Initialize the Gemini API client with your API key
@@ -23,7 +30,7 @@ const genAI = new GoogleGenerativeAI(geminiApiKey);
 
 app.post('/api/extrair-dados', async (req, res) => {
     try {
-        const contents = req.body.contents; // Get content from the frontend
+        const contents = req.body.contents;
 
         if (!geminiApiKey) {
             return res.status(500).json({ error: "Chave da API Gemini não configurada no backend." });
@@ -56,7 +63,6 @@ app.post('/api/extrair-dados', async (req, res) => {
             extractedData = JSON.parse(jsonStringLimpo);
         } catch (jsonError) {
             console.warn("Resposta da Gemini API não é JSON válido, tentando extrair dados como texto:", jsonError);
-            // Fallback de extração de texto (opcional)
         }
 
         if (!Array.isArray(extractedData)) {
@@ -68,8 +74,8 @@ app.post('/api/extrair-dados', async (req, res) => {
     } catch (error) {
         console.error("Erro no backend ao processar imagem e chamar API Gemini:", error);
         if(error.response && error.response.text) {
-         console.error("Erro no backend ao processar imagem e chamar API Gemini:", error.response.text);
-         }
+           console.error("Erro no backend ao processar imagem e chamar API Gemini:", error.response.text);
+        }
         res.status(500).json({ error: "Erro interno do servidor ao processar a imagem.", details: error.message});
     }
 });
