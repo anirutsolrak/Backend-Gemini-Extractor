@@ -12,7 +12,7 @@ const corsOptions = {
   origin: (origin, callback) => {
     if (
       !origin || // Permite requests sem origin (ex: curl)
-      origin.startsWith("https://frontend-gemini-extractor.vercel.app") || // Permite seu domínio do front
+      origin.startsWith("https://frontend-gemini-extractor-3j33srzoo-anirutsolraks-projects.vercel.app/") || // Permite seu domínio do front
       origin.endsWith("vercel.app") // Permite quaisquer subdomínios do vercel
     ) {
       callback(null, true); // Permite a requisição
